@@ -47,14 +47,15 @@ class Direction {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const initialDepth = 3;
-const stepSize = 128 / Math.pow(2, initialDepth);
+const pixelSize = 128;
+const stepSize = pixelSize / Math.pow(2, initialDepth);
 let x, y, direction;
 
-drawNumeral0(initialDepth);
+drawNumeral4(32, 32, initialDepth);
 
-function drawNumeral0(depth) {
-    x = 416;
-    y = 160;
+function drawNumeral0(initX, initY, depth) {
+    x = initX + 3 * pixelSize - stepSize;
+    y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -105,9 +106,35 @@ function drawNumeral0(depth) {
     ctx.stroke();
 }
 
-function drawNumeral2(depth) {
-    x = 32;
-    y = 160;
+function drawNumeral1(initX, initY, depth) {
+    x = initX + 2 * pixelSize - stepSize;
+    y = initY;
+    direction = new Direction(LEFT);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    ctx.stroke();
+}
+
+function drawNumeral2(initX, initY, depth) {
+    x = initX;
+    y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -151,9 +178,103 @@ function drawNumeral2(depth) {
     ctx.stroke();
 }
 
-function drawNumeral5(depth) {
-    x = 416;
-    y = 160;
+function drawNumeral3(initX, initY, depth) {
+    x = initX;
+    y = initY + pixelSize - stepSize;
+    direction = new Direction(UP);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    ctx.stroke();
+    x = initX + 3 * pixelSize - stepSize;
+    y = initY + 3 * pixelSize;
+    direction = new Direction(LEFT);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    ctx.stroke();
+}
+
+function drawNumeral4(initX, initY, depth) {
+    x = initX + pixelSize - stepSize;
+    y = initY;
+    direction = new Direction(LEFT);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    ctx.stroke();
+    x = initX + 3 * pixelSize - stepSize;
+    y = initY;
+    direction = new Direction(LEFT);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    ctx.stroke();
+}
+
+function drawNumeral5(initX, initY, depth) {
+    x = initX + 3 * pixelSize - stepSize;
+    y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
     ctx.moveTo(x, y);
