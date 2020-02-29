@@ -46,17 +46,56 @@ class Direction {
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const initialDepth = 6;
-const stepSize = 400 / Math.pow(2, initialDepth);
+const initialDepth = 3;
+const stepSize = 128 / Math.pow(2, initialDepth);
 let x, y, direction;
 
-x = 50;
-y = 50;
-direction = new Direction(RIGHT);
-ctx.beginPath();
-ctx.moveTo(x, y);
-drawRightCurve(initialDepth);
-ctx.stroke();
+drawNumeral2(initialDepth);
+
+function drawNumeral2(depth) {
+    x = 160;
+    y = 32;
+    direction = new Direction(LEFT);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawLeftCurve(depth);
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    ctx.stroke();
+}
 
 function drawLeftCurve(depth) {
     if (depth === 1) {
@@ -106,7 +145,7 @@ function drawRightCurve(depth) {
     }
 }
 
-function forward(distance) {
+function forward() {
     x += direction.xMultiplier * stepSize;
     y += direction.yMultiplier * stepSize;
     ctx.lineTo(x, y);
