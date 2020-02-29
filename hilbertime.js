@@ -50,15 +50,69 @@ const initialDepth = 3;
 const stepSize = 128 / Math.pow(2, initialDepth);
 let x, y, direction;
 
-drawNumeral2(initialDepth);
+drawNumeral0(initialDepth);
 
-function drawNumeral2(depth) {
-    x = 160;
-    y = 32;
-    direction = new Direction(LEFT);
+function drawNumeral0(depth) {
+    x = 416;
+    y = 160;
+    direction = new Direction(UP);
     ctx.beginPath();
     ctx.moveTo(x, y);
     drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    ctx.stroke();
+}
+
+function drawNumeral2(depth) {
+    x = 32;
+    y = 160;
+    direction = new Direction(UP);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawRightCurve(depth);
+    direction.turnLeft();
     forward();
     direction.turnLeft();
     drawRightCurve(depth);
@@ -94,6 +148,52 @@ function drawNumeral2(depth) {
     forward();
     direction.turnLeft();
     drawRightCurve(depth);
+    ctx.stroke();
+}
+
+function drawNumeral5(depth) {
+    x = 416;
+    y = 160;
+    direction = new Direction(UP);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    direction.turnLeft();
+    forward();
+    direction.turnLeft();
+    drawRightCurve(depth);
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
+    direction.turnRight();
+    forward();
+    direction.turnRight();
+    drawLeftCurve(depth);
     ctx.stroke();
 }
 
