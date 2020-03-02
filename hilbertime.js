@@ -51,11 +51,62 @@ const pixelSize = 128;
 const stepSize = pixelSize / Math.pow(2, initialDepth);
 let x, y, direction;
 
-drawNumeral1(32 - pixelSize + stepSize, 32, initialDepth);
-drawNumeral1(32 + 2 * pixelSize - stepSize, 32, initialDepth);
-drawColon(32 + 6 * pixelSize - stepSize, 32, initialDepth);
-drawNumeral2(32 + 8 * pixelSize - stepSize, 32, initialDepth);
-drawNumeral7(32 + 12 * pixelSize - stepSize, 32, initialDepth);
+drawTime(32, 32, initialDepth);
+function drawTime(initX, initY, depth) {
+    let hours = new Date().getHours();
+    const minutes = new Date().getMinutes();
+    if (hours > 12) {
+        hours -= 12;
+    }
+    if (hours >= 10) {
+        drawNumeral(1, initX - pixelSize + stepSize, initY, depth);
+        drawNumeral(hours % 10, initX + 2 * pixelSize - stepSize, initY, depth);
+        drawColon(initX + 6 * pixelSize - stepSize, initY, depth);
+        drawNumeral(Math.floor(minutes / 10), initX + 8 * pixelSize - stepSize, initY, depth);
+        drawNumeral(minutes % 10, initX + 12 * pixelSize - stepSize, initY, depth);
+    } else {
+        drawNumeral(hours % 10, initX, initY, depth);
+        drawColon(initX + 4 * pixelSize - stepSize, initY, depth);
+        drawNumeral(Math.floor(minutes / 10), initX + 6 * pixelSize - stepSize, initY, depth);
+        drawNumeral(minutes % 10, initX + 10 * pixelSize - stepSize, initY, depth);
+
+    }
+}
+
+function drawNumeral(numeral, initX, initY, depth) {
+    switch (numeral) {
+        case 0:
+            drawNumeral0(initX, initY, depth);
+            break;
+        case 1:
+            drawNumeral1(initX, initY, depth);
+            break;
+        case 2:
+            drawNumeral2(initX, initY, depth);
+            break;
+        case 3:
+            drawNumeral3(initX, initY, depth);
+            break;
+        case 4:
+            drawNumeral4(initX, initY, depth);
+            break;
+        case 5:
+            drawNumeral5(initX, initY, depth);
+            break;
+        case 6:
+            drawNumeral6(initX, initY, depth);
+            break;
+        case 7:
+            drawNumeral7(initX, initY, depth);
+            break;
+        case 8:
+            drawNumeral8(initX, initY, depth);
+            break;
+        case 9:
+            drawNumeral9(initX, initY, depth);
+            break;
+    }
+}
 
 function drawNumeral0(initX, initY, depth) {
     x = initX + 3 * pixelSize - stepSize;
