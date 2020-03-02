@@ -51,7 +51,11 @@ const pixelSize = 128;
 const stepSize = pixelSize / Math.pow(2, initialDepth);
 let x, y, direction;
 
-drawNumeral9(32, 32, initialDepth);
+drawNumeral1(32 - pixelSize + stepSize, 32, initialDepth);
+drawNumeral1(32 + 2 * pixelSize - stepSize, 32, initialDepth);
+drawColon(32 + 6 * pixelSize - stepSize, 32, initialDepth);
+drawNumeral2(32 + 8 * pixelSize - stepSize, 32, initialDepth);
+drawNumeral7(32 + 12 * pixelSize - stepSize, 32, initialDepth);
 
 function drawNumeral0(initX, initY, depth) {
     x = initX + 3 * pixelSize - stepSize;
@@ -490,6 +494,23 @@ function drawNumeral9(initX, initY, depth) {
     direction.turnRight();
     forward();
     direction.turnRight();
+    drawLeftCurve(depth);
+    ctx.stroke();
+}
+
+function drawColon(initX, initY, depth) {
+    x = initX;
+    y = initY + 2 * pixelSize;
+    direction = new Direction(UP);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    drawRightCurve(depth);
+    ctx.stroke();
+    x = initX;
+    y = initY + 3 * pixelSize - stepSize;
+    direction = new Direction(DOWN);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
     drawLeftCurve(depth);
     ctx.stroke();
 }
