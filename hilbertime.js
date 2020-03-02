@@ -46,9 +46,11 @@ class Direction {
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const initialDepth = 3;
+const initialDepth = 5;
 const pixelSize = 128;
 const stepSize = pixelSize / Math.pow(2, initialDepth);
+const queue = [];
+let shouldQueue = false;
 let x, y, direction;
 
 drawTime(32, 32, initialDepth);
@@ -68,8 +70,9 @@ function drawTime(initX, initY, depth) {
         drawNumeral(hours % 10, initX, initY, depth);
         drawColon(initX + 4 * pixelSize - stepSize, initY, depth);
         drawNumeral(Math.floor(minutes / 10), initX + 6 * pixelSize - stepSize, initY, depth);
+        shouldQueue = true;
         drawNumeral(minutes % 10, initX + 10 * pixelSize - stepSize, initY, depth);
-
+        drawQueue();
     }
 }
 
@@ -617,5 +620,26 @@ function drawRightCurve(depth) {
 function forward() {
     x += direction.xMultiplier * stepSize;
     y += direction.yMultiplier * stepSize;
-    ctx.lineTo(x, y);
+    if (shouldQueue) {
+        queue.push([x, y]);
+    } else {
+        ctx.lineTo(x, y);
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function drawQueue() {
+    ctx.beginPath();
+    [initX, initY] = queue.shift();
+    ctx.moveTo(initX, initY);
+    [nextX, nextY] = queue[0];
+    ctx.lineTo(nextX, nextY);
+    ctx.stroke();
+    if (queue.length > 1) {
+        await sleep(1);
+        drawQueue();
+    }
 }
