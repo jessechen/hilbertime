@@ -52,6 +52,8 @@ const stepSize = pixelSize / Math.pow(2, initialDepth);
 const queue = [];
 let shouldQueue = false;
 let x, y, direction;
+let segmentCount;
+let prevTimestamp = null;
 
 drawTime(32, 32, initialDepth);
 function drawTime(initX, initY, depth) {
@@ -72,7 +74,8 @@ function drawTime(initX, initY, depth) {
         drawNumeral(Math.floor(minutes / 10), initX + 6 * pixelSize - stepSize, initY, depth);
         shouldQueue = true;
         drawNumeral(minutes % 10, initX + 10 * pixelSize - stepSize, initY, depth);
-        drawQueue();
+        segmentCount = queue.length;
+        window.requestAnimationFrame(drawQueue);
     }
 }
 
@@ -627,19 +630,28 @@ function forward() {
     }
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function drawQueue() {
+function drawQueue(timestamp) {
+    if (prevTimestamp) {
+    }
     ctx.beginPath();
-    [initX, initY] = queue.shift();
-    ctx.moveTo(initX, initY);
-    [nextX, nextY] = queue[0];
-    ctx.lineTo(nextX, nextY);
+    if (prevTimestamp) {
+        let deltaMillis = timestamp - prevTimestamp;
+        drawSegments(Math.ceil(60000 / (segmentCount * deltaMillis)));
+    } else {
+        drawSegments(1);
+    }
+    prevTimestamp = timestamp;
     ctx.stroke();
     if (queue.length > 1) {
-        await sleep(1);
-        drawQueue();
+        window.requestAnimationFrame(drawQueue);
+    }
+}
+
+function drawSegments(count) {
+    for (let i = 0; i < count; i++) {
+        [initX, initY] = queue.shift();
+        ctx.moveTo(initX, initY);
+        [nextX, nextY] = queue[0];
+        ctx.lineTo(nextX, nextY);
     }
 }
