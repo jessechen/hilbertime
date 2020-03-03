@@ -44,6 +44,22 @@ class Direction {
     }
 }
 
+class Command {
+    constructor(x, y, line = true) {
+        this.x = x;
+        this.y = y;
+        this.line = line;
+    }
+
+    execute() {
+        if (this.line) {
+            ctx.lineTo(this.x, this.y);
+        } else {
+            ctx.moveTo(this.x, this.y);
+        }
+    }
+}
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const initialDepth = 5;
@@ -119,7 +135,7 @@ function drawNumeral0(initX, initY, depth) {
     y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -172,7 +188,7 @@ function drawNumeral1(initX, initY, depth) {
     y = initY;
     direction = new Direction(LEFT);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -198,7 +214,7 @@ function drawNumeral2(initX, initY, depth) {
     y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawRightCurve(depth);
     direction.turnLeft();
     forward();
@@ -244,7 +260,7 @@ function drawNumeral3(initX, initY, depth) {
     y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawRightCurve(depth);
     direction.turnLeft();
     forward();
@@ -268,12 +284,10 @@ function drawNumeral3(initX, initY, depth) {
     forward();
     direction.turnLeft();
     drawRightCurve(depth);
-    ctx.stroke();
     x = initX + 3 * pixelSize - stepSize;
     y = initY + 3 * pixelSize;
     direction = new Direction(LEFT);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -294,7 +308,7 @@ function drawNumeral4(initX, initY, depth) {
     y = initY;
     direction = new Direction(LEFT);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -307,12 +321,10 @@ function drawNumeral4(initX, initY, depth) {
     forward();
     direction.turnLeft();
     drawRightCurve(depth);
-    ctx.stroke();
     x = initX + 3 * pixelSize - stepSize;
     y = initY;
     direction = new Direction(LEFT);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -338,7 +350,7 @@ function drawNumeral5(initX, initY, depth) {
     y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -384,7 +396,7 @@ function drawNumeral6(initX, initY, depth) {
     y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -434,7 +446,7 @@ function drawNumeral7(initX, initY, depth) {
     y = initY + pixelSize - stepSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawRightCurve(depth);
     direction.turnLeft();
     forward();
@@ -467,7 +479,7 @@ function drawNumeral8(initX, initY, depth) {
     y = initY + 2 * pixelSize - stepSize;
     direction = new Direction(LEFT);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawRightCurve(depth);
     direction.turnLeft();
     forward();
@@ -518,7 +530,7 @@ function drawNumeral9(initX, initY, depth) {
     y = initY + 2 * pixelSize - stepSize;
     direction = new Direction(RIGHT);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     direction.turnRight();
     forward();
@@ -560,14 +572,12 @@ function drawColon(initX, initY, depth) {
     y = initY + 2 * pixelSize;
     direction = new Direction(UP);
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawRightCurve(depth);
-    ctx.stroke();
     x = initX;
     y = initY + 3 * pixelSize - stepSize;
     direction = new Direction(DOWN);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+    move(x, y);
     drawLeftCurve(depth);
     ctx.stroke();
 }
@@ -624,15 +634,21 @@ function forward() {
     x += direction.xMultiplier * stepSize;
     y += direction.yMultiplier * stepSize;
     if (shouldQueue) {
-        queue.push([x, y]);
+        queue.push(new Command(x, y, true));
     } else {
         ctx.lineTo(x, y);
     }
 }
 
-function drawQueue(timestamp) {
-    if (prevTimestamp) {
+function move(newX, newY) {
+    if (shouldQueue) {
+        queue.push(new Command(newX, newY, false));
+    } else {
+        ctx.moveTo(newX, newY);
     }
+}
+
+function drawQueue(timestamp) {
     ctx.beginPath();
     if (prevTimestamp) {
         let deltaMillis = timestamp - prevTimestamp;
@@ -649,9 +665,9 @@ function drawQueue(timestamp) {
 
 function drawSegments(count) {
     for (let i = 0; i < count; i++) {
-        [initX, initY] = queue.shift();
-        ctx.moveTo(initX, initY);
-        [nextX, nextY] = queue[0];
-        ctx.lineTo(nextX, nextY);
+        const prevCommand = queue.shift();
+        ctx.moveTo(prevCommand.x, prevCommand.y);
+        const currCommand = queue[0];
+        currCommand.execute();
     }
 }
