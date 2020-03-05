@@ -62,6 +62,8 @@ class Command {
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const initX = 32;
+const initY = 32;
 const initialDepth = 5;
 const pixelSize = 128;
 const stepSize = pixelSize / Math.pow(2, initialDepth);
@@ -71,25 +73,29 @@ let x, y, direction;
 let segmentCount;
 let prevTimestamp = null;
 
-drawTime(32, 32, initialDepth);
-function drawTime(initX, initY, depth) {
+drawTime();
+function drawTime() {
+    ctx.clearRect(0, 0, 1960, 704);
     let hours = new Date().getHours();
     const minutes = new Date().getMinutes();
     if (hours > 12) {
         hours -= 12;
     }
     if (hours >= 10) {
-        drawNumeral(1, initX - pixelSize + stepSize, initY, depth);
-        drawNumeral(hours % 10, initX + 2 * pixelSize - stepSize, initY, depth);
-        drawColon(initX + 6 * pixelSize - stepSize, initY, depth);
-        drawNumeral(Math.floor(minutes / 10), initX + 8 * pixelSize - stepSize, initY, depth);
-        drawNumeral(minutes % 10, initX + 12 * pixelSize - stepSize, initY, depth);
-    } else {
-        drawNumeral(hours % 10, initX, initY, depth);
-        drawColon(initX + 4 * pixelSize - stepSize, initY, depth);
-        drawNumeral(Math.floor(minutes / 10), initX + 6 * pixelSize - stepSize, initY, depth);
+        drawNumeral(1, initX - pixelSize + stepSize, initY, initialDepth);
+        drawNumeral(hours % 10, initX + 2 * pixelSize - stepSize, initY, initialDepth);
+        drawColon(initX + 6 * pixelSize - stepSize, initY, initialDepth);
+        drawNumeral(Math.floor(minutes / 10), initX + 8 * pixelSize - stepSize, initY, initialDepth);
         shouldQueue = true;
-        drawNumeral(minutes % 10, initX + 10 * pixelSize - stepSize, initY, depth);
+        drawNumeral(minutes % 10, initX + 12 * pixelSize - stepSize, initY, initialDepth);
+        segmentCount = queue.length;
+        window.requestAnimationFrame(drawQueue);
+    } else {
+        drawNumeral(hours % 10, initX, initY, initialDepth);
+        drawColon(initX + 4 * pixelSize - stepSize, initY, initialDepth);
+        drawNumeral(Math.floor(minutes / 10), initX + 6 * pixelSize - stepSize, initY, initialDepth);
+        shouldQueue = true;
+        drawNumeral(minutes % 10, initX + 10 * pixelSize - stepSize, initY, initialDepth);
         segmentCount = queue.length;
         window.requestAnimationFrame(drawQueue);
     }
@@ -652,14 +658,19 @@ function drawQueue(timestamp) {
     ctx.beginPath();
     if (prevTimestamp) {
         let deltaMillis = timestamp - prevTimestamp;
-        drawSegments(Math.ceil(60000 / (segmentCount * deltaMillis)));
+        drawSegments(Math.floor(deltaMillis / 60000 * segmentCount));
     } else {
-        drawSegments(1);
+        const seconds = new Date().getSeconds();
+        drawSegments(Math.floor(seconds / 60 * segmentCount));
     }
     prevTimestamp = timestamp;
     ctx.stroke();
     if (queue.length > 1) {
         window.requestAnimationFrame(drawQueue);
+    } else {
+        prevTimestamp = null;
+        shouldQueue = false;
+        window.requestAnimationFrame(drawTime);
     }
 }
 
@@ -667,6 +678,9 @@ function drawSegments(count) {
     for (let i = 0; i < count; i++) {
         const prevCommand = queue.shift();
         ctx.moveTo(prevCommand.x, prevCommand.y);
+        if (queue.length === 0) {
+            return;
+        }
         const currCommand = queue[0];
         currCommand.execute();
     }
