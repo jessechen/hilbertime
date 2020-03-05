@@ -71,6 +71,7 @@ const queue = [];
 let shouldQueue = false;
 let x, y, direction;
 let segmentCount;
+let fractionalSegments = 0;
 let prevTimestamp = null;
 
 drawTime();
@@ -657,10 +658,14 @@ function move(newX, newY) {
 function drawQueue(timestamp) {
     ctx.beginPath();
     if (prevTimestamp) {
-        let deltaMillis = timestamp - prevTimestamp;
-        drawSegments(Math.floor(deltaMillis / 60000 * segmentCount));
+        const deltaMillis = timestamp - prevTimestamp;
+        const numSegments = (deltaMillis / 60000 * segmentCount) + fractionalSegments;
+        const integralSegments = Math.floor(numSegments);
+        fractionalSegments = numSegments - integralSegments;
+        drawSegments(integralSegments);
     } else {
         const seconds = new Date().getSeconds();
+        fractionalSegments = 0;
         drawSegments(Math.floor(seconds / 60 * segmentCount));
     }
     prevTimestamp = timestamp;
