@@ -5,12 +5,17 @@
 Production
 ----------
 
-[Github Pages](https://jessechen.github.io/hilbertime/hilbertime.html)
+[Github Pages](https://approximateknowledge.net/hilbertime)
 
-Setup
------
+Local Development
+-----------------
 
-`python -m http.server`
+`python3 -m http.server`
+
+Deployment
+----------
+
+The `trunk` branch is continuously deployed
 
 License
 -------
