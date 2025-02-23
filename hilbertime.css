@@ -6,7 +6,7 @@ body {
 }
 
 .plus, .minus {
-    position: absolute;
+    position: fixed;
     width: 24px;
     height: 24px;
     cursor: pointer;
