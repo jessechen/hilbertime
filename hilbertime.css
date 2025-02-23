@@ -4,3 +4,23 @@ body {
     font-family: Geneva, Tahoma, Verdana, sans-serif;
     background-color: #000;
 }
+
+.plus, .minus {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: #e00000;
+    background-color: #000;
+    border-color: #e00000;
+}
+
+.plus {
+    top: 48px;
+    right: 48px;
+}
+
+.minus {
+    top: 72px;
+    right: 48px;
+}
