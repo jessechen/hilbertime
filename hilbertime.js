@@ -66,19 +66,26 @@ const ctx = canvas.getContext('2d');
 ctx.strokeStyle = "#e00000";
 const initX = 32;
 const initY = 32;
-const initialDepth = 5;
 const pixelSize = 128;
-const stepSize = pixelSize / Math.pow(2, initialDepth);
-const queue = [];
+let initialDepth = 5;
+let stepSize = pixelSize / Math.pow(2, initialDepth);
+let queue = [];
 let shouldQueue = false;
 let x, y, direction;
 let segmentCount;
 let fractionalSegments = 0;
 let prevTimestamp = null;
+let clearSignal = false;
+document.querySelector(".plus")?.addEventListener("click", handlePlus);
+document.querySelector(".minus")?.addEventListener("click", handleMinus);
 
 drawTime();
 function drawTime() {
     ctx.clearRect(0, 0, 1960, 704);
+    clearSignal = false;
+    prevTimestamp = null;
+    shouldQueue = false;
+    queue = [];
     let hours = new Date().getHours();
     const minutes = new Date().getMinutes();
     if (hours > 12) {
@@ -672,11 +679,9 @@ function drawQueue(timestamp) {
     }
     prevTimestamp = timestamp;
     ctx.stroke();
-    if (queue.length > 1) {
+    if (queue.length > 1 && !clearSignal) {
         window.requestAnimationFrame(drawQueue);
     } else {
-        prevTimestamp = null;
-        shouldQueue = false;
         window.requestAnimationFrame(drawTime);
     }
 }
@@ -691,4 +696,20 @@ function drawSegments(count) {
         const currCommand = queue[0];
         currCommand.execute();
     }
+}
+
+function handleMinus() {
+    if (initialDepth > 1) {
+        initialDepth -= 1;
+    }
+    stepSize = pixelSize / Math.pow(2, initialDepth);
+    clearSignal = true;
+}
+
+function handlePlus() {
+    if (initialDepth < 7) {
+        initialDepth += 1;
+    }
+    stepSize = pixelSize / Math.pow(2, initialDepth);
+    clearSignal = true;
 }
