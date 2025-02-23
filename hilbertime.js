@@ -1,8 +1,9 @@
 const TAU = 2 * Math.PI;
-const UP = TAU / 4;
+
 const RIGHT = 0;
-const DOWN = 3 * TAU / 4;
-const LEFT = TAU / 2;
+const UP = 1/4 * TAU;
+const LEFT = 1/2 * TAU;
+const DOWN = 3/4 * TAU;
 
 class Direction {
     constructor(theta) {
